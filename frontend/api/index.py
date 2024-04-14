@@ -1,12 +1,9 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List
-from fastapi.responses import RedirectResponse
 from sklearn.preprocessing import LabelEncoder
 import sqlite3
 import pickle
-import os
 import csv
 import pandas as pd
 import random
