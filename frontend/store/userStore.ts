@@ -4,7 +4,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 const URL = process.env.NEXT_PUBLIC_VERCEL_URL
   ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api`
-  : "http://localhost:3000/api";
+  : "http://localhost:8000/api";
 
 type User = {
   id: number;
@@ -40,7 +40,7 @@ export const userStore = create<UserStore>()(
       openPopup: false,
       userList: [],
       fetchUserList: async () => {
-        const response = await fetch(`/api/user`);
+        const response = await fetch(`${URL}/user`);
         const data = await response.json();
         set({ userList: data });
       },
@@ -49,7 +49,7 @@ export const userStore = create<UserStore>()(
         if (res) set({ user: res });
       },
       fetchPredict: async (userId: string) => {
-        const response = await fetch(`/api/predict/${userId}`);
+        const response = await fetch(`${URL}/predict/${userId}`);
         const data = await response.json();
         if (data.predict_popup) {
           set({ openPopup: true });

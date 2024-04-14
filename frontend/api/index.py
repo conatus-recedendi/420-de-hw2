@@ -19,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-with open('./app/api/models/LR.pkl', 'rb') as f:
+with open('./api/models/LR.pkl', 'rb') as f:
   clf2 = pickle.load(f)
 
 
@@ -164,7 +164,7 @@ def predict(user_id):
     print('[userData]: ', predict_category)
     
     return {
-        "predict_popup": random.randint(0,),
+        "predict_popup": random.randint(0,1),
         "predict_category": predict_category
     }
 # predict_category
@@ -179,7 +179,7 @@ def parse_customer_data():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    with open('./app/api/data/customer_data.csv', 'r') as file:
+    with open('./api/data/customer_data.csv', 'r') as file:
         reader = csv.reader(file)
 
         next(reader)  # Skip header row
@@ -221,7 +221,7 @@ def parse_customer_data():
                 extended_user.satisfaction_score
             ))
             
-    with open('./app/api/data/customer_data.csv', 'r') as file:
+    with open('./api/data/customer_data.csv', 'r') as file:
         reader = csv.reader(file)
 
         next(reader)  # Skip header row
