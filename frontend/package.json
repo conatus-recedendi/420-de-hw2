@@ -25,12 +25,8 @@
     "@nextui-org/theme": "2.1.17",
     "@react-aria/ssr": "^3.8.0",
     "@react-aria/visually-hidden": "^3.8.6",
-    "@types/node": "20.5.7",
-    "@types/react": "18.2.21",
-    "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.16",
     "clsx": "^2.0.0",
-    "concurrently": "^8.2.2",
     "eslint": "8.48.0",
     "eslint-config-next": "14.0.2",
     "framer-motion": "^10.16.4",
@@ -44,5 +40,11 @@
     "tailwindcss": "3.3.5",
     "typescript": "5.0.4",
     "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "20.5.7",
+    "@types/react": "18.2.21",
+    "@types/react-dom": "18.2.7",
+    "concurrently": "^8.2.2"
   }
 }
