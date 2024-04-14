@@ -164,7 +164,7 @@ def predict(user_id):
     print('[userData]: ', predict_category)
     
     return {
-        "predict_popup": ran,
+        "predict_popup": random.randint(0,),
         "predict_category": predict_category
     }
 # predict_category

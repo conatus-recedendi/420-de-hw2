@@ -1,0 +1,89 @@
+\documentclass[12pt]{exam}
+\usepackage{amsthm}
+\usepackage{libertine}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\usepackage{siunitx}
+\usepackage{cancel}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{kotex}
+
+
+\pgfplotsset{width=10cm,compat=1.9}
+\usepgfplotslibrary{external}
+\tikzexternalize
+
+\newcommand{\class}{AI5308/AI4005: Data Engineering} % This is the name of the course 
+\newcommand{\examnum}{Assignment 2 (Due: Apr 14)} 
+% \newcommand{\examnum}{Assignment 3 (Due: May 12)} 
+\newcommand{\timelimit}{}
+
+
+
+\begin{document}
+\pagestyle{plain}
+\thispagestyle{empty}
+
+\noindent
+\begin{tabular*}{\textwidth}{l @{\extracolsep{\fill}} r @{\extracolsep{6pt}} l}
+\textbf{\class} & \textbf{Student ID:} & \textit{20195122} \\ %Your name here instead, obviously 
+\textbf{\examnum}  & \textbf{Name:} & \textit{Kyung Kyu Lee} \\
+\end{tabular*}\\
+\vspace{2mm}
+\rule[1ex]{\textwidth}{1pt}
+% ---
+
+
+\medskip
+
+\textbf{Background:} 
+\begin{enumerate} %You can make lists!
+  \item The various features needed to predict travel time are broadly categorized into static or dynamic information over time. For instance, companies like Kakao and T-Map Mobility use the Customizable Contraction Hierarchies (CCH) algorithm to calculate expected travel times based on spatial information. While the preprocessing stage for learning all regional information nationwide using the CCH algorithm is quite lengthy, it takes relatively less time to reflect changes in the information that only affects the weights between certain edges (here, when the travel time on specific roads changes). In reality, factors that affect travel time include static information that barely changes over time, such as regional information and road structure, and dynamic information like weather and traffic accidents. Since navigation services must reflect real-time information due to the dynamic nature of such information, the CCH algorithm is used. As the importance of how dynamic the features are over time is crucial in this design proposal, we will categorize the features based on their dynamism.
+\end{enumerate}
+
+\textbf{Design:} 
+\begin{enumerate}
+  \item Based on the discussion in the background section, the features to be considered for travel time prediction will be divided into four layers: static layer, cyclic layer, dynamic layer, and user layer.
+
+  The "static layer" includes information such as regional data, shortest path algorithms, and road structure information, which are static over time. Although GIS information is typically represented as continuous values based on latitude and longitude, shortest path algorithms operate on graph-based data structures. Thus, road structure information must be transformed into a graph format. In this format, each node of the graph must represent regional information in a geometrically repeating pattern without overlaps or omissions. Hexagons are the most uniform shapes to represent each node’s regional and road structure information, used in shortest path algorithms like Dijkstra and CCH.
+  
+  The "cyclic layer" contains information that changes periodically over time. For example, variations in traffic volume depending on weekdays or weekends and specific times like rush hours are periodic and highly predictable, significantly influencing expected travel times.
+  
+  The "dynamic layer" includes real-time information that needs to be reflected, such as weather, traffic accidents, and current traffic conditions. Unlike the static and cyclic layers, it is difficult to predict when such events will occur, but it is crucial to predict how much they will impact travel time once they do occur.
+  
+  Finally, the "user layer" includes personalized information such as driver and vehicle data, which are independent of time.
+  
+\end{enumerate}
+
+\textbf{Challenges:} 
+\begin{enumerate}
+  \item Now, the proposed feature structure in the design phase will explain how it can solve real-world problems. there are 5 problems to explain through our design: understanding distance, spatial division with hexagonal grids, influence of events and environments, database features, real-time computation.
+
+  \item "Understanding distance" involves defining the distance between starting and endpoint perspectives. In the proposed method, distance information is included in the static layer. Rather than merely training the model on the latitude and longitude of the start and end locations, the approach uses a shortest path algorithm. The model will keep the graph structure but learn to predict the weights (expected time) of the edges. This method resolves the issue where the L2 distance does not accurately reflect the actual travel distance.
+
+  \item "Spatial division with hexagonal grids" explains how geographic data presented in a hexagonal pattern affects features. As mentioned, if we assume each graph node represents an actual regional area in a hexagonal shape, then all nodes will have a hexagonal shape with six different neighboring nodes. If two neighboring hexagonal regions are not connected or cannot be traversed, the edge between these two nodes is removed to form the graph.
+
+  \item "Influence of events and environments" addresses how to quantify and train models on intermittent event and environment information. These are included in the dynamic and cyclic layers. For example, if a traffic accident on a road from point A to B delays travel time, the features representing this delay (accident scale, occurrence time, etc.) will be used in the model to learn the impact on the weight of the edge between nodes A and B. This method allows intermittent events to be reflected in travel time predictions.
+  \item "Database features" considers which features collected during service operation can best predict expected travel times. These features are broadly divided into two types. One type includes features related to time, such as real-time traffic information during commuting hours, which belongs to the cyclic layer. The other type includes features like driving styles and vehicle information, which are included in the user layer and managed there.
+  \item "Real-time Computation" addresses the technical solutions for handling real-time information concerning computational costs. As mentioned in the design phase, while transforming regional information into a graph format and learning the impact of features included in the dynamic layer on each edge's weight, this approach allows real-time information to be reflected more quickly than relearning the entire structure of the shortest path algorithm.
+\end{enumerate}
+
+
+\textbf{References}
+\begin{enumerate}
+  \item 카카오 테크 (2021).카카오맵과 CCH 알고리즘. \newline Retrieved from https://tech.kakao.com/2021/05/10/kakaomap-cch/
+  \item Customizable Contraction Hierarchies. Julian Dibbelt, Ben Strasser, and Dorothea Wagner. ACM Journal of Experimental Algorithmics, 2016.
+\end{enumerate}
+
+\vspace{5mm}
+\rule[1ex]{\textwidth}{1pt}
+% ---
+
+\end{document}

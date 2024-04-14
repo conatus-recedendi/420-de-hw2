@@ -1,0 +1,83 @@
+\documentclass[12pt]{exam}
+\usepackage{amsthm}
+\usepackage{libertine}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{multicol}
+\usepackage[shortlabels]{enumitem}
+\usepackage{siunitx}
+\usepackage{cancel}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{hyperref}
+
+
+\pgfplotsset{width=10cm,compat=1.9}
+\usepgfplotslibrary{external}
+\tikzexternalize
+
+\newcommand{\class}{AI5308/AI4005: Data Engineering} % This is the name of the course 
+\newcommand{\examnum}{Assignment 2 (Due: Apr 14)} 
+% \newcommand{\examnum}{Assignment 3 (Due: May 12)} 
+\newcommand{\timelimit}{}
+
+
+
+\begin{document}
+\pagestyle{plain}
+\thispagestyle{empty}
+
+\noindent
+\begin{tabular*}{\textwidth}{l @{\extracolsep{\fill}} r @{\extracolsep{6pt}} l}
+\textbf{\class} & \textbf{Student ID:} & \textit{20195122} \\ %Your name here instead, obviously 
+\textbf{\examnum}  & \textbf{Name:} & \textit{Kyung Kyu Lee} \\
+\end{tabular*}\\
+\vspace{2mm}
+\rule[1ex]{\textwidth}{1pt}
+% ---
+
+\textbf{Title:} Review of actions speak louder than goals-valuing player actions in soccer
+
+\medskip
+\textbf{Rating:} 
+
+\medskip
+\textbf{Summary:} n soccer matches, the traditional scoring method only considers key actions such as shots or goals, assigns constant weights to each action, and considers the situation only when the action occurs. This method fails to take into account the future impact of these actions on the game. To overcome these limitations, the paper proposes SPADL, a standardized language for individual player actions in soccer, and VAEP, a framework for predicting the outcomes and performances resulting from player actions. Furthermore, the paper demonstrates better predictions with an actual machine learning model based on this framework, showing improved performance over traditional methods.
+
+\medskip
+
+\textbf{Strengths:} 
+\begin{enumerate} %You can make lists!
+  \item The paper clearly identifies the limitations of traditional soccer scoring systems and proposes a structured data format and framework that can address these issues. This offers a new perspective that problems with model performance might not only arise during modeling but may also be due to unstructured data forms. 
+  
+  \item It covers the entire process of problem recognition and resolution in ML, including 'data preprocessing', 'modeling', 'inference', and 'application' provided through a Python package discussed in the paper, helping to understand the general processes involved in ML in practice.
+\end{enumerate}
+
+\textbf{Weaknesses:} 
+\begin{enumerate}
+  \item While SPADL and VAEP can convey the context up to the point of a specific action, they still cannot judge broader contexts. For example, actions such as marking an opposing forward to prevent a pass, which are meaningful in actual games but not considered in the model, are not included. This limitation may lead to biases towards certain positions.
+
+  \item The model is also based on data without ground truth, making it difficult to measure its performance. Although the paper attempts to demonstrate performance using methods like ROC AUC, it lacks a detailed explanation of how false/true criteria were defined in this context.
+  
+\end{enumerate}
+
+\textbf{Questions:} 
+\begin{enumerate}
+    \item In addition to intuitively relevant information like ActionType, BodyType, Result, Time, Location, and Player, SPADL also includes seemingly unrelated attributes like Team. I wonder if such information actually influences the learning process. 
+    \item Given the limited amount of data in soccer matches, I'm curious whether information like Time and Location can also show significant meaning.
+\end{enumerate}
+
+\textbf{Discussions:} 
+\begin{enumerate}
+  \item  The data structure SPADL proposed in the paper seems very flexible for adding different forms of action 'if collectable'. However, adding new actions would require retraining the model. Perhaps methods like Framing, discussed in class, could allow for inference without retraining when new actions are added.
+\end{enumerate}
+
+
+\vspace{5mm}
+\rule[1ex]{\textwidth}{1pt}
+% ---
+
+\end{document}
