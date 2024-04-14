@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from sklearn.preprocessing import LabelEncoder
+# from sklearn.preprocessing import LabelEncoder
 import sqlite3
 import pickle
 import csv
@@ -175,94 +175,96 @@ def predict(user_id):
 # 5 -> "Health"
 # 6 -> "Home"
 
-def parse_customer_data():
-    conn = get_db_connection()
-    cursor = conn.cursor()
+# parse customer_data는 실 배포 때 사용하지 않음! 사이즈 문제 땜누에
+# def parse_customer_data():
+#     conn = get_db_connection()
+#     cursor = conn.cursor()
 
-    with open('./api/data/customer_data.csv', 'r') as file:
-        reader = csv.reader(file)
+#     with open('./api/data/customer_data.csv', 'r') as file:
+#         reader = csv.reader(file)
 
-        next(reader)  # Skip header row
+#         next(reader)  # Skip header row
 
-        userList = pd.DataFrame(reader, columns=["id","age","gender","income","education","region","loyalty_status","purchase_frequency","purchase_amount","product_category","promotion_usage","satisfaction_score"])
-        encoder = LabelEncoder()
-        encodedColumn = ['gender', 'education', 'region', 'loyalty_status', 'product_category', 'purchase_frequency']
+#         userList = pd.DataFrame(reader, columns=["id","age","gender","income","education","region","loyalty_status","purchase_frequency","purchase_amount","product_category","promotion_usage","satisfaction_score"])
+        
+#         encoder = LabelEncoder()
+#         encodedColumn = ['gender', 'education', 'region', 'loyalty_status', 'product_category', 'purchase_frequency']
 
-        for column in encodedColumn:
-            userList[column] = encoder.fit_transform(userList[column])
+#         for column in encodedColumn:
+#             userList[column] = encoder.fit_transform(userList[column])
         
         
-        for user in userList.iterrows():
-            extended_user = EncodedUser(
-                id=int(user[1]['id']),
-                age=int(user[1]['age']),
-                gender=int(user[1]['gender']),
-                income=int(user[1]['income']),
-                education=int(user[1]['education']),
-                region=int(user[1]['region']),
-                loyalty_status=int(user[1]['loyalty_status']),
-                purchase_frequency=int(user[1]['purchase_frequency']),
-                purchase_amount=int(user[1]['purchase_amount']),
-                product_category=int(user[1]['product_category']),
-                promotion_usage=int(user[1]['promotion_usage']),
-                satisfaction_score=int(user[1]['satisfaction_score'])
-            )
-            cursor.execute("""
-                INSERT INTO encodedUsers (
-                    id, age, gender, income, education, region, loyalty_status,
-                    purchase_frequency, purchase_amount, product_category,
-                    promotion_usage, satisfaction_score
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                extended_user.id, extended_user.age, extended_user.gender, extended_user.income, extended_user.education,
-                extended_user.region, extended_user.loyalty_status, extended_user.purchase_frequency,
-                extended_user.purchase_amount, extended_user.product_category, extended_user.promotion_usage,
-                extended_user.satisfaction_score
-            ))
+#         for user in userList.iterrows():
+#             extended_user = EncodedUser(
+#                 id=int(user[1]['id']),
+#                 age=int(user[1]['age']),
+#                 gender=int(user[1]['gender']),
+#                 income=int(user[1]['income']),
+#                 education=int(user[1]['education']),
+#                 region=int(user[1]['region']),
+#                 loyalty_status=int(user[1]['loyalty_status']),
+#                 purchase_frequency=int(user[1]['purchase_frequency']),
+#                 purchase_amount=int(user[1]['purchase_amount']),
+#                 product_category=int(user[1]['product_category']),
+#                 promotion_usage=int(user[1]['promotion_usage']),
+#                 satisfaction_score=int(user[1]['satisfaction_score'])
+#             )
+#             cursor.execute("""
+#                 INSERT INTO encodedUsers (
+#                     id, age, gender, income, education, region, loyalty_status,
+#                     purchase_frequency, purchase_amount, product_category,
+#                     promotion_usage, satisfaction_score
+#                 )
+#                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+#             """, (
+#                 extended_user.id, extended_user.age, extended_user.gender, extended_user.income, extended_user.education,
+#                 extended_user.region, extended_user.loyalty_status, extended_user.purchase_frequency,
+#                 extended_user.purchase_amount, extended_user.product_category, extended_user.promotion_usage,
+#                 extended_user.satisfaction_score
+#             ))
             
-    with open('./api/data/customer_data.csv', 'r') as file:
-        reader = csv.reader(file)
+#     with open('./api/data/customer_data.csv', 'r') as file:
+#         reader = csv.reader(file)
 
-        next(reader)  # Skip header row
-        print("[start!!]", reader.line_num)
-        for row in reader:
-            print
-            user = User(
-                id=int(row[0]),
-                age=int(row[1]),
-                gender=row[2],
-                income=int(row[3]),
-                education=row[4],
-                region=row[5],
-                loyalty_status=row[6],
-                purchase_frequency=row[7],
-                purchase_amount=int(row[8]),
-                product_category=row[9],
-                promotion_usage=int(row[10]),
-                satisfaction_score=int(row[11])
-            )
-            cursor.execute("""
-                INSERT INTO users (
-                    id, age, gender, income, education, region, loyalty_status,
-                    purchase_frequency, purchase_amount, product_category,
-                    promotion_usage, satisfaction_score
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                user.id, user.age, user.gender, user.income, user.education,
-                user.region, user.loyalty_status, user.purchase_frequency,
-                user.purchase_amount, user.product_category, user.promotion_usage,
-                user.satisfaction_score
-            ))
+#         next(reader)  # Skip header row
+#         print("[start!!]", reader.line_num)
+#         for row in reader:
+#             print
+#             user = User(
+#                 id=int(row[0]),
+#                 age=int(row[1]),
+#                 gender=row[2],
+#                 income=int(row[3]),
+#                 education=row[4],
+#                 region=row[5],
+#                 loyalty_status=row[6],
+#                 purchase_frequency=row[7],
+#                 purchase_amount=int(row[8]),
+#                 product_category=row[9],
+#                 promotion_usage=int(row[10]),
+#                 satisfaction_score=int(row[11])
+#             )
+#             cursor.execute("""
+#                 INSERT INTO users (
+#                     id, age, gender, income, education, region, loyalty_status,
+#                     purchase_frequency, purchase_amount, product_category,
+#                     promotion_usage, satisfaction_score
+#                 )
+#                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+#             """, (
+#                 user.id, user.age, user.gender, user.income, user.education,
+#                 user.region, user.loyalty_status, user.purchase_frequency,
+#                 user.purchase_amount, user.product_category, user.promotion_usage,
+#                 user.satisfaction_score
+#             ))
             
 
-    conn.commit()
-    conn.close()
+#     conn.commit()
+#     conn.close()
 
 @app.post("/api/initialize")
 def initialize():
-    parse_customer_data()
+    # parse_customer_data()
     return {"status": "success"}    
 # # API endpoint to create a new comment
 # @app.post("/api/comments")
