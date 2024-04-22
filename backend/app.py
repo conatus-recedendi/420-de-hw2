@@ -185,55 +185,89 @@ def predict(user_id):
 # 5 -> "Health"
 # 6 -> "Home"
 
+
 # parse customer_data는 실 배포 때 사용하지 않음! 사이즈 문제 땜누에
 # def parse_customer_data():
 #     conn = get_db_connection()
 #     cursor = conn.cursor()
 
-#     with open('./api/data/customer_data.csv', 'r') as file:
+#     with open("./api/data/customer_data.csv", "r") as file:
 #         reader = csv.reader(file)
 
 #         next(reader)  # Skip header row
 
-#         userList = pd.DataFrame(reader, columns=["id","age","gender","income","education","region","loyalty_status","purchase_frequency","purchase_amount","product_category","promotion_usage","satisfaction_score"])
+#         userList = pd.DataFrame(
+#             reader,
+#             columns=[
+#                 "id",
+#                 "age",
+#                 "gender",
+#                 "income",
+#                 "education",
+#                 "region",
+#                 "loyalty_status",
+#                 "purchase_frequency",
+#                 "purchase_amount",
+#                 "product_category",
+#                 "promotion_usage",
+#                 "satisfaction_score",
+#             ],
+#         )
 
 #         encoder = LabelEncoder()
-#         encodedColumn = ['gender', 'education', 'region', 'loyalty_status', 'product_category', 'purchase_frequency']
+#         encodedColumn = [
+#             "gender",
+#             "education",
+#             "region",
+#             "loyalty_status",
+#             "product_category",
+#             "purchase_frequency",
+#         ]
 
 #         for column in encodedColumn:
 #             userList[column] = encoder.fit_transform(userList[column])
 
-
 #         for user in userList.iterrows():
 #             extended_user = EncodedUser(
-#                 id=int(user[1]['id']),
-#                 age=int(user[1]['age']),
-#                 gender=int(user[1]['gender']),
-#                 income=int(user[1]['income']),
-#                 education=int(user[1]['education']),
-#                 region=int(user[1]['region']),
-#                 loyalty_status=int(user[1]['loyalty_status']),
-#                 purchase_frequency=int(user[1]['purchase_frequency']),
-#                 purchase_amount=int(user[1]['purchase_amount']),
-#                 product_category=int(user[1]['product_category']),
-#                 promotion_usage=int(user[1]['promotion_usage']),
-#                 satisfaction_score=int(user[1]['satisfaction_score'])
+#                 id=int(user[1]["id"]),
+#                 age=int(user[1]["age"]),
+#                 gender=int(user[1]["gender"]),
+#                 income=int(user[1]["income"]),
+#                 education=int(user[1]["education"]),
+#                 region=int(user[1]["region"]),
+#                 loyalty_status=int(user[1]["loyalty_status"]),
+#                 purchase_frequency=int(user[1]["purchase_frequency"]),
+#                 purchase_amount=int(user[1]["purchase_amount"]),
+#                 product_category=int(user[1]["product_category"]),
+#                 promotion_usage=int(user[1]["promotion_usage"]),
+#                 satisfaction_score=int(user[1]["satisfaction_score"]),
 #             )
-#             cursor.execute("""
+#             cursor.execute(
+#                 """
 #                 INSERT INTO encodedUsers (
 #                     id, age, gender, income, education, region, loyalty_status,
 #                     purchase_frequency, purchase_amount, product_category,
 #                     promotion_usage, satisfaction_score
 #                 )
 #                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-#             """, (
-#                 extended_user.id, extended_user.age, extended_user.gender, extended_user.income, extended_user.education,
-#                 extended_user.region, extended_user.loyalty_status, extended_user.purchase_frequency,
-#                 extended_user.purchase_amount, extended_user.product_category, extended_user.promotion_usage,
-#                 extended_user.satisfaction_score
-#             ))
+#             """,
+#                 (
+#                     extended_user.id,
+#                     extended_user.age,
+#                     extended_user.gender,
+#                     extended_user.income,
+#                     extended_user.education,
+#                     extended_user.region,
+#                     extended_user.loyalty_status,
+#                     extended_user.purchase_frequency,
+#                     extended_user.purchase_amount,
+#                     extended_user.product_category,
+#                     extended_user.promotion_usage,
+#                     extended_user.satisfaction_score,
+#                 ),
+#             )
 
-#     with open('./api/data/customer_data.csv', 'r') as file:
+#     with open("./api/data/customer_data.csv", "r") as file:
 #         reader = csv.reader(file)
 
 #         next(reader)  # Skip header row
@@ -252,22 +286,32 @@ def predict(user_id):
 #                 purchase_amount=int(row[8]),
 #                 product_category=row[9],
 #                 promotion_usage=int(row[10]),
-#                 satisfaction_score=int(row[11])
+#                 satisfaction_score=int(row[11]),
 #             )
-#             cursor.execute("""
+#             cursor.execute(
+#                 """
 #                 INSERT INTO users (
 #                     id, age, gender, income, education, region, loyalty_status,
 #                     purchase_frequency, purchase_amount, product_category,
 #                     promotion_usage, satisfaction_score
 #                 )
 #                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-#             """, (
-#                 user.id, user.age, user.gender, user.income, user.education,
-#                 user.region, user.loyalty_status, user.purchase_frequency,
-#                 user.purchase_amount, user.product_category, user.promotion_usage,
-#                 user.satisfaction_score
-#             ))
-
+#             """,
+#                 (
+#                     user.id,
+#                     user.age,
+#                     user.gender,
+#                     user.income,
+#                     user.education,
+#                     user.region,
+#                     user.loyalty_status,
+#                     user.purchase_frequency,
+#                     user.purchase_amount,
+#                     user.product_category,
+#                     user.promotion_usage,
+#                     user.satisfaction_score,
+#                 ),
+#             )
 
 #     conn.commit()
 #     conn.close()
@@ -277,15 +321,3 @@ def predict(user_id):
 def initialize():
     # parse_customer_data()
     return {"status": "success"}
-
-
-# # API endpoint to create a new comment
-# @app.post("/api/comments")
-# def create_comment(comment: CommentCreate):
-#     conn = get_db_connection()
-#     cursor = conn.cursor()
-#     cursor.execute("INSERT INTO comments (text) VALUES (?)", (comment.text,))
-#     conn.commit()
-#     comment_id = cursor.lastrowid
-#     conn.close()
-#     return {"id": comment_id, "text": comment.text}
