@@ -20,7 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-with open("./api/models/LR.pkl", "rb") as f:
+with open("./models/LR.pkl", "rb") as f:
     clf2 = pickle.load(f)
 
 
