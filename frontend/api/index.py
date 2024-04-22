@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
 # from sklearn.preprocessing import LabelEncoder
 import sqlite3
 import pickle
@@ -19,21 +20,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-with open('./api/models/LR.pkl', 'rb') as f:
-  clf2 = pickle.load(f)
+with open("./api/models/LR.pkl", "rb") as f:
+    clf2 = pickle.load(f)
 
 
 # Function to get a database connection
 def get_db_connection():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect("users.db")
     conn.row_factory = sqlite3.Row
     return conn
+
 
 # Function to initialize the database
 def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("""
+    cursor.execute(
+        """
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             age INTEGER NOT NULL,
@@ -48,9 +51,11 @@ def init_db():
             promotion_usage INTEGER NOT NULL,
             satisfaction_score INTEGER NOT NULL
         )
-    """)
+    """
+    )
     conn.commit()
-    cursor.execute("""
+    cursor.execute(
+        """
         CREATE TABLE IF NOT EXISTS encodedUsers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             age INTEGER NOT NULL,
@@ -65,11 +70,14 @@ def init_db():
             promotion_usage INTEGER NOT NULL,
             satisfaction_score INTEGER NOT NULL
         )
-        """)
+        """
+    )
     conn.commit()
     conn.close()
 
+
 init_db()
+
 
 class User(BaseModel):
     id: int
@@ -85,6 +93,7 @@ class User(BaseModel):
     promotion_usage: int
     satisfaction_score: int
 
+
 class EncodedUser(BaseModel):
     id: int
     age: int
@@ -99,6 +108,12 @@ class EncodedUser(BaseModel):
     promotion_usage: int
     satisfaction_score: int
 
+
+@app.get("/healthcheck")
+def healthcheck():
+    return {"status": "ok"}
+
+
 @app.get("/api/user")
 def get_comments():
     conn = get_db_connection()
@@ -107,6 +122,7 @@ def get_comments():
     users = cursor.fetchall()
     conn.close()
     return users
+
 
 @app.get("/api/encodedUser")
 def get_comments():
@@ -117,6 +133,7 @@ def get_comments():
     conn.close()
     return users
 
+
 @app.get("/api/predict/{user_id}")
 def predict(user_id):
     conn = get_db_connection()
@@ -124,13 +141,13 @@ def predict(user_id):
     cursor.execute("SELECT * FROM encodedUsers WHERE id = ?", (user_id,))
     encodedUser = cursor.fetchone()
     conn.close()
-    
+
     encodedUser = list(encodedUser)
     del encodedUser[9]  # Remove product_category from encodedUser
     encodedUser = tuple(encodedUser)
-    
+
     predict = clf2.predict([encodedUser])
-    
+
     predict_category = ""
     predict[0] = predict
     # if predict[0] == 1:
@@ -160,13 +177,11 @@ def predict(user_id):
     elif ran == 6:
         predict_category = "Home"
 
+    print("[userData]: ", predict_category)
 
-    print('[userData]: ', predict_category)
-    
-    return {
-        "predict_popup": random.randint(0,1),
-        "predict_category": predict_category
-    }
+    return {"predict_popup": random.randint(0, 1), "predict_category": predict_category}
+
+
 # predict_category
 # 1 -> "Books"
 # 2 -> "Clothing"
@@ -186,14 +201,14 @@ def predict(user_id):
 #         next(reader)  # Skip header row
 
 #         userList = pd.DataFrame(reader, columns=["id","age","gender","income","education","region","loyalty_status","purchase_frequency","purchase_amount","product_category","promotion_usage","satisfaction_score"])
-        
+
 #         encoder = LabelEncoder()
 #         encodedColumn = ['gender', 'education', 'region', 'loyalty_status', 'product_category', 'purchase_frequency']
 
 #         for column in encodedColumn:
 #             userList[column] = encoder.fit_transform(userList[column])
-        
-        
+
+
 #         for user in userList.iterrows():
 #             extended_user = EncodedUser(
 #                 id=int(user[1]['id']),
@@ -222,7 +237,7 @@ def predict(user_id):
 #                 extended_user.purchase_amount, extended_user.product_category, extended_user.promotion_usage,
 #                 extended_user.satisfaction_score
 #             ))
-            
+
 #     with open('./api/data/customer_data.csv', 'r') as file:
 #         reader = csv.reader(file)
 
@@ -257,15 +272,18 @@ def predict(user_id):
 #                 user.purchase_amount, user.product_category, user.promotion_usage,
 #                 user.satisfaction_score
 #             ))
-            
+
 
 #     conn.commit()
 #     conn.close()
 
+
 @app.post("/api/initialize")
 def initialize():
     # parse_customer_data()
-    return {"status": "success"}    
+    return {"status": "success"}
+
+
 # # API endpoint to create a new comment
 # @app.post("/api/comments")
 # def create_comment(comment: CommentCreate):
